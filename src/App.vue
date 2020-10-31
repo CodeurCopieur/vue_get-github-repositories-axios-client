@@ -1,17 +1,41 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="container">
+      <input type="text" v-model="username">
+      <button @click="fetchRepos">Click me!</button>
+
+      <ul id="wapper__list-repos">
+        <li v-for="repo in repos" :key="repo.name">
+          {{ repo.name }}
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {
+      username: null,
+      repos: null
+    }
+  },
+  methods: {
+    fetchRepos() {
+      /*
+        [1] Get data from api
+        [2] Return the response
+        [3] Catch error
+      */
+     return this.$http.get(`https://api.github.com/users/${this.username}/repos`)
+            .then( response => {
+              this.repos = response.data;
+              console.log(this.repos);
+            })
+    }
   }
 }
 </script>
@@ -21,8 +45,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100vh;
 }
 </style>
